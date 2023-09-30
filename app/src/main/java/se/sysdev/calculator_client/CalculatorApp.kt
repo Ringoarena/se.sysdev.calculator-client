@@ -1,9 +1,9 @@
-package se.sysdev.calculator_client.ui.theme
+package se.sysdev.calculator_client
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -23,11 +22,13 @@ fun CalculatorApp() {
     Surface(
       modifier = Modifier
         .fillMaxSize()
-        .background(Color.Gray)
         .padding(paddingValues)
     ) {
       Column {
         Text(text = "content")
+        Button(onClick = { CalculatorServiceFacade().calculateAddition(2,1) }) {
+          Text(text = "Calculate")
+        }
       }
     }
   }
