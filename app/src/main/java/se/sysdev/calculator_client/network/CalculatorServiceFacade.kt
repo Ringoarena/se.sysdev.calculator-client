@@ -1,4 +1,4 @@
-package se.sysdev.calculator_client
+package se.sysdev.calculator_client.network
 
 import java.io.BufferedReader
 import java.io.InputStreamReader
