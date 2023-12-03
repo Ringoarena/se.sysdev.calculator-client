@@ -32,9 +32,7 @@ fun CalculatorApp() {
             val calculatorViewModel: CalculatorViewModel = viewModel()
             val calculatorUiState by calculatorViewModel.uiState.collectAsState()
             Column {
-                calculatorUiState.calculatedValue?.let {
-                  Text(text = "$it")
-                }
+                Text(text = "${calculatorUiState.calculatedValue}")
                 OutlinedTextField(
                     value = calculatorViewModel.operandA,
                     onValueChange = { calculatorViewModel.updateOperandA(it) },

@@ -25,9 +25,9 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun calculateAddition() {
-        val aNum = operandA.toInt()
-        val bNum = operandB.toInt()
-        val sum = aNum + bNum
+        val aNum: Long = operandA.toLong()
+        val bNum: Long = operandB.toLong()
+        val sum: Long = aNum + bNum
         _uiState.value = CalculatorUiState(sum)
     }
 }
