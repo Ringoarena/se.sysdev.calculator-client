@@ -10,8 +10,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
-import se.sysdev.calculator_client.network.CalculationRequest
-import se.sysdev.calculator_client.network.CalculationResponse
+import se.sysdev.calculator_client.dto.CalculationRequest
+import se.sysdev.calculator_client.dto.CalculationResponse
+import se.sysdev.calculator_client.dto.OperationsResponse
 import se.sysdev.calculator_client.network.CalculatorApi
 
 class CalculatorViewModel : ViewModel() {
@@ -24,12 +25,32 @@ class CalculatorViewModel : ViewModel() {
     var operandB by mutableStateOf("")
         private set
 
+    fun updateOperation(newValue: String) {
+        operation = newValue
+    }
+
     fun updateOperandA(newValue: String) {
         operandA = newValue
     }
 
     fun updateOperandB(newValue: String) {
         operandB = newValue
+    }
+
+    fun getOperations() {
+        viewModelScope.launch {
+            val response: Response<OperationsResponse> = try {
+              CalculatorApi.retrofitService.getOperations()
+            } catch (e: Exception) {
+                println("Exception when fetching operations ${e.message}")
+                return@launch
+            }
+            if (response.isSuccessful && response.body() != null) {
+                val availableOperations = response.body()!!.operations
+                println("Successfully received operations from server: ${availableOperations}")
+                _uiState.value = CalculatorUiState(0, availableOperations)
+            }
+        }
     }
 
     fun calculateAddition() {
@@ -39,16 +60,16 @@ class CalculatorViewModel : ViewModel() {
         val operands = listOf(aNum, bNum)
         val calculationRequest = CalculationRequest(operation, operands)
         viewModelScope.launch {
-            val resp: Response<CalculationResponse> = try {
+            val response: Response<CalculationResponse> = try {
                 CalculatorApi.retrofitService.calculate(calculationRequest)
             } catch (e: Exception) {
-                println("Exception when calling server: ${e.message}")
+                println("Exception when fetching result: ${e.message}")
                 return@launch
             }
-            if (resp.isSuccessful && resp.body() != null) {
-                val resultValue = resp.body()!!.result
+            if (response.isSuccessful && response.body() != null) {
+                val resultValue = response.body()!!.result
                 println("Successfully received result from server: $resultValue")
-                _uiState.value = CalculatorUiState(resultValue)
+                _uiState.value = CalculatorUiState(resultValue, uiState.value.availableOperations)
             }
         }
     }

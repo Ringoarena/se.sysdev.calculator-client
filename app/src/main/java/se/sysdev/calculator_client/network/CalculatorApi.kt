@@ -5,6 +5,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.POST
 import retrofit2.http.Body
+import retrofit2.http.GET
+import se.sysdev.calculator_client.dto.CalculationRequest
+import se.sysdev.calculator_client.dto.CalculationResponse
+import se.sysdev.calculator_client.dto.OperationsResponse
 
 private const val baseUrl = "https://calculator-lirxy4bywq-lz.a.run.app"
 
@@ -13,18 +17,11 @@ private val retrofit = Retrofit.Builder()
   .baseUrl(baseUrl)
   .build()
 
-data class CalculationRequest(
-  val operation: String,
-  val operands: List<Long>
-)
-
-data class CalculationResponse(
-  val result: Long
-)
-
 interface CalculatorApiService {
   @POST("v2/calculation")
   suspend fun calculate(@Body r: CalculationRequest): Response<CalculationResponse>
+  @GET("v2/operations")
+  suspend fun getOperations(): Response<OperationsResponse>
 }
 
 object CalculatorApi {
